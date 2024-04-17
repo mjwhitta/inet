@@ -16,4 +16,4 @@ var (
 )
 
 // Version is the package version
-const Version string = "0.1.0-dev-1"
+const Version string = "0.1.0"
