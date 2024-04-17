@@ -26,3 +26,9 @@ func (c *WinINetClient) Timeout(timeout time.Duration) Client {
 	c.Client.Timeout = timeout
 	return c
 }
+
+// Transport will set the transport for the underlying wininet.Client.
+func (c *WinINetClient) Transport(trans *http.Transport) Client {
+	c.Client.Transport = trans
+	return c
+}

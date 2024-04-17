@@ -19,4 +19,5 @@ type Client interface {
 	) (*http.Response, error)
 	PostForm(url string, data url.Values) (*http.Response, error)
 	Timeout(timeout time.Duration) Client
+	Transport(trans *http.Transport) Client
 }

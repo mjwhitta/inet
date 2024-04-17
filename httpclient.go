@@ -22,3 +22,9 @@ func (c *HTTPClient) Timeout(timeout time.Duration) Client {
 	c.Client.Timeout = timeout
 	return c
 }
+
+// Transport will set the transport for the underlying http.Client.
+func (c *HTTPClient) Transport(trans *http.Transport) Client {
+	c.Client.Transport = trans
+	return c
+}
