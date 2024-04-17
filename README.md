@@ -88,9 +88,11 @@ func configuredRequestAndDedicatedClientExample() error {
 func init() {
     // Disable TLS verification (WARNING: insecure)
     if t, ok := http.DefaultTransport.(*http.Transport); ok {
-        t.TLSClientConfig = &tls.Config{
-            InsecureSkipVerify: true,
+        if t.TLSClientConfig == nil {
+            t.TLSClientConfig = &tls.Config{}
         }
+
+        t.TLSClientConfig.InsecureSkipVerify = true
     }
 }
 
