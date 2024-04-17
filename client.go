@@ -13,10 +13,10 @@ type Client interface {
 	Do(req *http.Request) (*http.Response, error)
 	Get(url string) (*http.Response, error)
 	Head(url string) (*http.Response, error)
-	Jar(jar http.CookieJar)
+	Jar(jar http.CookieJar) Client
 	Post(
 		url string, contentType string, body io.Reader,
 	) (*http.Response, error)
 	PostForm(url string, data url.Values) (*http.Response, error)
-	Timeout(timeout time.Duration)
+	Timeout(timeout time.Duration) Client
 }

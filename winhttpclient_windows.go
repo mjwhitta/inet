@@ -16,11 +16,13 @@ type WinHTTPClient struct {
 }
 
 // Jar will set the cookiejar for the underlying winhttp.Client.
-func (c *WinHTTPClient) Jar(jar http.CookieJar) {
+func (c *WinHTTPClient) Jar(jar http.CookieJar) Client {
 	c.Client.Jar = jar
+	return c
 }
 
 // Timeout will set the timeout for the underlying winhttp.Client.
-func (c *WinHTTPClient) Timeout(timeout time.Duration) {
+func (c *WinHTTPClient) Timeout(timeout time.Duration) Client {
 	c.Client.Timeout = timeout
+	return c
 }

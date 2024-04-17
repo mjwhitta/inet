@@ -16,11 +16,13 @@ type WinINetClient struct {
 }
 
 // Jar will set the cookiejar for the underlying wininet.Client.
-func (c *WinINetClient) Jar(jar http.CookieJar) {
+func (c *WinINetClient) Jar(jar http.CookieJar) Client {
 	c.Client.Jar = jar
+	return c
 }
 
 // Timeout will set the timeout for the underlying wininet.Client.
-func (c *WinINetClient) Timeout(timeout time.Duration) {
+func (c *WinINetClient) Timeout(timeout time.Duration) Client {
 	c.Client.Timeout = timeout
+	return c
 }
