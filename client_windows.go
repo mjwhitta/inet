@@ -11,10 +11,8 @@ import (
 // Backend is used to track the preferred backend HTTP client. Windows
 // allows for net/http, WinHTTP, and WinINet. The default is WinINet.
 func Backend(backend int) error {
-	switch backend {
-	case HTTPBackend, WinHTTPBackend, WinINetBackend:
-	default:
-		return errors.Newf("unsupported backend %d", backend)
+	if e := isValidBackend(backend); e != nil {
+		return e
 	}
 
 	useBackend = backend

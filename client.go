@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 // Client is an interface defining required functions for an HTTP
@@ -17,4 +18,5 @@ type Client interface {
 		url string, contentType string, body io.Reader,
 	) (*http.Response, error)
 	PostForm(url string, data url.Values) (*http.Response, error)
+	Timeout(timeout time.Duration)
 }

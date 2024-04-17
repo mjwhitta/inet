@@ -4,6 +4,7 @@ package inet
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/mjwhitta/win/wininet"
 )
@@ -17,4 +18,9 @@ type WinINetClient struct {
 // Jar will set the cookiejar for the underlying wininet.Client.
 func (c *WinINetClient) Jar(jar http.CookieJar) {
 	c.Client.Jar = jar
+}
+
+// Timeout will set the timeout for the underlying wininet.Client.
+func (c *WinINetClient) Timeout(timeout time.Duration) {
+	c.Client.Timeout = timeout
 }
