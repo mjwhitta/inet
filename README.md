@@ -13,7 +13,7 @@ interface and handles choosing an appropriate backend. On Windows you
 can use any of the three supported backends (defaults to `wininet`).
 On Linux the only supported backend is `net/http`.
 
-[winhittp]: https://github.com/mjwhitta/win/tree/main/winhttp
+[winhttp]: https://github.com/mjwhitta/win/tree/main/winhttp
 [wininet]: https://github.com/mjwhitta/win/tree/main/wininet
 
 ## How to install
