@@ -81,6 +81,7 @@ func configuredRequestAndDedicatedClientExample() error {
     if res, e = c.Do(req); e != nil {
         return e
     }
+    defer res.Body.Close()
 
     return output(res)
 }
@@ -110,12 +111,8 @@ func output(res *http.Response) error {
     var b []byte
     var e error
 
-    if res.Body != nil {
-        defer res.Body.Close()
-
-        if b, e = io.ReadAll(res.Body); e != nil {
-            return e
-        }
+    if b, e = io.ReadAll(res.Body); e != nil {
+        return e
     }
 
     fmt.Println(res.Status)
@@ -145,6 +142,7 @@ func simpleGetExample() error {
     if res, e = inet.Get(dst); e != nil {
         return e
     }
+    defer res.Body.Close()
 
     return output(res)
 }
