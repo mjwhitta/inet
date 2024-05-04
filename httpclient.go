@@ -26,28 +26,28 @@ func (c *HTTPClient) Do(req *http.Request) (*http.Response, error) {
 	var e error
 	var res *http.Response
 
-	if c.debug {
-		// net/http will add cookies for you, and if we add them here
-		// for debugging, they end up in the request twice...
-		// if c.Client.Jar != nil {
-		// 	for _, cookie := range c.Client.Jar.Cookies(req.URL) {
-		// 		req.AddCookie(cookie)
-		// 	}
-		// }
+	if !c.debug {
+		return c.Client.Do(req)
+	}
 
-		if b, e = httputil.DumpRequestOut(req, true); e == nil {
-			println(string(b))
-		}
+	// net/http will add cookies for you, and if we add them here
+	// for debugging, they end up in the request twice...
+	// if c.Client.Jar != nil {
+	// 	for _, cookie := range c.Client.Jar.Cookies(req.URL) {
+	// 		req.AddCookie(cookie)
+	// 	}
+	// }
+
+	if b, e = httputil.DumpRequestOut(req, true); e == nil {
+		println(string(b))
 	}
 
 	if res, e = c.Client.Do(req); e != nil {
 		return res, e
 	}
 
-	if c.debug {
-		if b, e = httputil.DumpResponse(res, true); e == nil {
-			println(string(b))
-		}
+	if b, e = httputil.DumpResponse(res, true); e == nil {
+		println(string(b))
 	}
 
 	return res, nil
