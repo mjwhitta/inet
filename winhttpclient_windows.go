@@ -15,6 +15,12 @@ type WinHTTPClient struct {
 	winhttp.Client
 }
 
+// Debug will enable debugging/logging of Requests/Responses.
+func (c *WinHTTPClient) Debug(enable bool) Client {
+	c.Client.Debug = enable
+	return c
+}
+
 // Jar will set the cookiejar for the underlying winhttp.Client.
 func (c *WinHTTPClient) Jar(jar http.CookieJar) Client {
 	c.Client.Jar = jar

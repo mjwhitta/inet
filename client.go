@@ -10,6 +10,7 @@ import (
 // Client is an interface defining required functions for an HTTP
 // client.
 type Client interface {
+	Debug(enable bool) Client
 	Do(req *http.Request) (*http.Response, error)
 	Get(url string) (*http.Response, error)
 	Head(url string) (*http.Response, error)
