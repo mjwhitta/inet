@@ -11,6 +11,7 @@ import (
 type HTTPClient struct {
 	http.Client
 	debug bool
+	ua    string
 }
 
 // Debug will enable debugging/logging of Requests/Responses.
@@ -25,6 +26,10 @@ func (c *HTTPClient) Do(req *http.Request) (*http.Response, error) {
 	var b []byte
 	var e error
 	var res *http.Response
+
+	if (c.ua != "") && (req.Header.Get("User-Agent") == "") {
+		req.Header.Set("User-Agent", c.ua)
+	}
 
 	if !c.debug {
 		return c.Client.Do(req)

@@ -58,7 +58,7 @@ func configuredRequestAndDedicatedClientExample() error {
     }
 
     // Create client
-    if c, e = inet.NewClient(); e != nil {
+    if c, e = inet.NewClient("My custom UA"); e != nil {
         return e
     }
 
@@ -75,7 +75,6 @@ func configuredRequestAndDedicatedClientExample() error {
     req.AddCookie(&http.Cookie{Name: "chocolatechip", Value: "tasty"})
     req.AddCookie(&http.Cookie{Name: "oatmealraisin", Value: "gross"})
     req.AddCookie(&http.Cookie{Name: "snickerdoodle", Value: "yummy"})
-    req.Header.Set("User-Agent", "testing, testing, 1, 2, 3...")
 
     // Send request
     if res, e = c.Do(req); e != nil {
