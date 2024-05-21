@@ -22,7 +22,6 @@ func Backend(backend int) error {
 }
 
 func init() {
-	useBackend = WinINetBackend
 	defaultClients = map[int]Client{HTTPBackend: &HTTPClient{}}
 
 	if tmp, e := winhttp.NewClient(); e != nil {
@@ -37,12 +36,12 @@ func init() {
 		defaultClients[WinINetBackend] = &WinINetClient{*tmp}
 	}
 
-	DefaultClient = defaultClients[WinINetBackend]
+	useBackend = WinINetBackend
+	DefaultClient = defaultClients[useBackend]
 }
 
 // NewClient will return a new Client for the current Backend. An
-// optional User-Agent can be provided for Windows backends only.
-// User-Agent will still need to be specified for requests.
+// optional User-Agent can be provided.
 func NewClient(ua ...string) (Client, error) {
 	var c1 *winhttp.Client
 	var c2 *wininet.Client

@@ -34,23 +34,31 @@ package main
 import (
     "bytes"
     "crypto/tls"
-    "fmt"
+    "flag"
     "io"
     "net/http"
     "net/http/cookiejar"
+    "net/url"
+    "strings"
 
     "github.com/mjwhitta/inet"
 )
 
-var dst string = "https://icanhazip.com"
+var (
+    debug bool
+    dst   string = "https://icanhazip.com"
+)
 
 func configuredRequestAndDedicatedClientExample() error {
-    var body io.Reader = bytes.NewReader([]byte("test"))
+    var b []byte
+    var body io.Reader = bytes.NewReader([]byte("what is my ip?"))
     var c inet.Client
     var e error
     var jar http.CookieJar
     var req *http.Request
     var res *http.Response
+
+    println("### Advanced usage ###")
 
     // Create cookiejar
     if jar, e = cookiejar.New(nil); e != nil {
@@ -62,8 +70,15 @@ func configuredRequestAndDedicatedClientExample() error {
         return e
     }
 
+    // Enable or disable debug functionality
+    c.Debug(debug) // Disabled by default
+
     // Set cookiejar
-    c.Jar(jar)
+    c.SetJar(jar)
+
+    if e = injectCookiesForTesting(c.Jar()); e != nil {
+        return e
+    }
 
     // Create request
     req, e = http.NewRequest(http.MethodPost, dst, body)
@@ -71,21 +86,27 @@ func configuredRequestAndDedicatedClientExample() error {
         return e
     }
 
-    // Configure request
-    req.AddCookie(&http.Cookie{Name: "chocolatechip", Value: "tasty"})
-    req.AddCookie(&http.Cookie{Name: "oatmealraisin", Value: "gross"})
-    req.AddCookie(&http.Cookie{Name: "snickerdoodle", Value: "yummy"})
-
     // Send request
     if res, e = c.Do(req); e != nil {
         return e
     }
     defer res.Body.Close()
 
-    return output(res)
+    if b, e = io.ReadAll(res.Body); e != nil {
+        return e
+    }
+
+    if !debug {
+        println(strings.TrimSpace(string(b)))
+    }
+
+    return nil
 }
 
 func init() {
+    flag.BoolVar(&debug, "debug", false, "Debug output")
+    flag.Parse()
+
     // Disable TLS verification (WARNING: insecure)
     if t, ok := http.DefaultTransport.(*http.Transport); ok {
         if t.TLSClientConfig == nil {
@@ -94,6 +115,23 @@ func init() {
 
         t.TLSClientConfig.InsecureSkipVerify = true
     }
+}
+
+func injectCookiesForTesting(jar http.CookieJar) error {
+    var cookies []*http.Cookie = []*http.Cookie{
+        &http.Cookie{Name: "chocolatechip", Value: "yum"},
+        &http.Cookie{Name: "oatmealraisin", Value: "gross"},
+        &http.Cookie{Name: "snickerdoodle", Value: "best"},
+    }
+    var e error
+    var uri *url.URL
+
+    if uri, e = url.Parse(dst); e != nil {
+        return e
+    }
+
+    jar.SetCookies(uri, cookies)
+    return nil
 }
 
 func main() {
@@ -106,36 +144,12 @@ func main() {
     }
 }
 
-func output(res *http.Response) error {
+func simpleGetExample() error {
     var b []byte
     var e error
-
-    if b, e = io.ReadAll(res.Body); e != nil {
-        return e
-    }
-
-    fmt.Println(res.Status)
-
-    for k := range res.Header {
-        fmt.Printf("%s: %s\n", k, res.Header.Get(k))
-    }
-
-    for _, cookie := range res.Cookies() {
-        fmt.Printf("%s = %s\n", cookie.Name, cookie.Value)
-    }
-
-    if len(b) > 0 {
-        fmt.Println(string(b))
-    }
-
-    fmt.Println()
-
-    return nil
-}
-
-func simpleGetExample() error {
-    var e error
     var res *http.Response
+
+    println("### Basic usage ###")
 
     // Use simple helper function
     if res, e = inet.Get(dst); e != nil {
@@ -143,7 +157,13 @@ func simpleGetExample() error {
     }
     defer res.Body.Close()
 
-    return output(res)
+    if b, e = io.ReadAll(res.Body); e != nil {
+        return e
+    }
+
+    println(strings.TrimSpace(string(b)))
+
+    return nil
 }
 ```
 

@@ -22,8 +22,7 @@ func init() {
 }
 
 // NewClient will return a new Client for the current Backend. An
-// optional User-Agent can be provided for Windows backends only.
-// User-Agent will still need to be specified for requests.
+// optional User-Agent can be provided.
 func NewClient(ua ...string) (Client, error) {
 	if len(ua) > 0 {
 		return &HTTPClient{ua: ua[0]}, nil

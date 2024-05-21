@@ -21,20 +21,37 @@ func (c *WinINetClient) Debug(enable bool) Client {
 	return c
 }
 
-// Jar will set the cookiejar for the underlying wininet.Client.
-func (c *WinINetClient) Jar(jar http.CookieJar) Client {
+// Jar will return the wininet.Client's cookiejar.
+func (c *WinINetClient) Jar() http.CookieJar {
+	return c.Client.Jar
+}
+
+// SetJar will set the cookiejar for the underlying wininet.Client.
+func (c *WinINetClient) SetJar(jar http.CookieJar) Client {
 	c.Client.Jar = jar
 	return c
 }
 
-// Timeout will set the timeout for the underlying wininet.Client.
-func (c *WinINetClient) Timeout(timeout time.Duration) Client {
+// SetTimeout will set the timeout for the underlying wininet.Client.
+func (c *WinINetClient) SetTimeout(timeout time.Duration) Client {
 	c.Client.Timeout = timeout
 	return c
 }
 
-// Transport will set the transport for the underlying wininet.Client.
-func (c *WinINetClient) Transport(trans *http.Transport) Client {
+// SetTransport will set the transport implementation for the
+// underlying wininet.Client.
+func (c *WinINetClient) SetTransport(trans http.RoundTripper) Client {
 	c.Client.Transport = trans
 	return c
+}
+
+// Timeout will return the wininet.Client's configured timeout.
+func (c *WinINetClient) Timeout() time.Duration {
+	return c.Client.Timeout
+}
+
+// Transport will return the wininet.Client's transport
+// implementation.
+func (c *WinINetClient) Transport() http.RoundTripper {
+	return c.Client.Transport
 }

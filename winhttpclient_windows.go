@@ -21,20 +21,37 @@ func (c *WinHTTPClient) Debug(enable bool) Client {
 	return c
 }
 
-// Jar will set the cookiejar for the underlying winhttp.Client.
-func (c *WinHTTPClient) Jar(jar http.CookieJar) Client {
+// Jar will return the winhttp.Client's cookiejar.
+func (c *WinHTTPClient) Jar() http.CookieJar {
+	return c.Client.Jar
+}
+
+// SetJar will set the cookiejar for the underlying winhttp.Client.
+func (c *WinHTTPClient) SetJar(jar http.CookieJar) Client {
 	c.Client.Jar = jar
 	return c
 }
 
-// Timeout will set the timeout for the underlying winhttp.Client.
-func (c *WinHTTPClient) Timeout(timeout time.Duration) Client {
+// SetTimeout will set the timeout for the underlying winhttp.Client.
+func (c *WinHTTPClient) SetTimeout(timeout time.Duration) Client {
 	c.Client.Timeout = timeout
 	return c
 }
 
-// Transport will set the transport for the underlying winhttp.Client.
-func (c *WinHTTPClient) Transport(trans *http.Transport) Client {
+// SetTransport will set the transport implementation for the
+// underlying winhttp.Client.
+func (c *WinHTTPClient) SetTransport(trans http.RoundTripper) Client {
 	c.Client.Transport = trans
 	return c
+}
+
+// Timeout will return the winhttp.Client's configured timeout.
+func (c *WinHTTPClient) Timeout() time.Duration {
+	return c.Client.Timeout
+}
+
+// Transport will return the winhttp.Client's transport
+// implementation.
+func (c *WinHTTPClient) Transport() http.RoundTripper {
+	return c.Client.Transport
 }

@@ -3,6 +3,7 @@ package inet
 import (
 	"net/http"
 	"net/http/httputil"
+	"strings"
 	"time"
 )
 
@@ -24,8 +25,10 @@ func (c *HTTPClient) Debug(enable bool) Client {
 // debugging of Requests/Responses.
 func (c *HTTPClient) Do(req *http.Request) (*http.Response, error) {
 	var b []byte
+	var cookies string
 	var e error
 	var res *http.Response
+	var skip bool
 
 	if (c.ua != "") && (req.Header.Get("User-Agent") == "") {
 		req.Header.Set("User-Agent", c.ua)
@@ -35,16 +38,31 @@ func (c *HTTPClient) Do(req *http.Request) (*http.Response, error) {
 		return c.Client.Do(req)
 	}
 
-	// net/http will add cookies for you, and if we add them here
-	// for debugging, they end up in the request twice...
-	// if c.Client.Jar != nil {
-	// 	for _, cookie := range c.Client.Jar.Cookies(req.URL) {
-	// 		req.AddCookie(cookie)
-	// 	}
-	// }
-
 	if b, e = httputil.DumpRequestOut(req, true); e == nil {
-		println(string(b))
+		if c.Client.Jar != nil {
+			for _, cookie := range c.Client.Jar.Cookies(req.URL) {
+				if cookies == "" {
+					cookies = cookie.String()
+				} else {
+					cookies += "; " + cookie.String()
+				}
+			}
+		}
+
+		skip = cookies == ""
+
+		for _, line := range strings.Split(string(b), "\n") {
+			println(line)
+
+			if skip {
+				continue
+			}
+
+			if strings.HasPrefix(line, "Content-Length:") {
+				println("Cookie: " + cookies)
+				skip = true
+			}
+		}
 	}
 
 	if res, e = c.Client.Do(req); e != nil {
@@ -52,26 +70,43 @@ func (c *HTTPClient) Do(req *http.Request) (*http.Response, error) {
 	}
 
 	if b, e = httputil.DumpResponse(res, true); e == nil {
+		println()
 		println(string(b))
 	}
 
 	return res, nil
 }
 
-// Jar will set the cookiejar for the underlying http.Client.
-func (c *HTTPClient) Jar(jar http.CookieJar) Client {
+// Jar will return the Client's cookiejar.
+func (c *HTTPClient) Jar() http.CookieJar {
+	return c.Client.Jar
+}
+
+// SetJar will set the cookiejar for the underlying http.Client.
+func (c *HTTPClient) SetJar(jar http.CookieJar) Client {
 	c.Client.Jar = jar
 	return c
 }
 
-// Timeout will set the timeout for the underlying http.Client.
-func (c *HTTPClient) Timeout(timeout time.Duration) Client {
+// SetTimeout will set the timeout for the underlying http.Client.
+func (c *HTTPClient) SetTimeout(timeout time.Duration) Client {
 	c.Client.Timeout = timeout
 	return c
 }
 
-// Transport will set the transport for the underlying http.Client.
-func (c *HTTPClient) Transport(trans *http.Transport) Client {
+// SetTransport will set the transport implementation for the
+// underlying http.Client.
+func (c *HTTPClient) SetTransport(trans http.RoundTripper) Client {
 	c.Client.Transport = trans
 	return c
+}
+
+// Timeout will return the Client's configured timeout.
+func (c *HTTPClient) Timeout() time.Duration {
+	return c.Client.Timeout
+}
+
+// Transport will return the Client's transport implementation.
+func (c *HTTPClient) Transport() http.RoundTripper {
+	return c.Client.Transport
 }
