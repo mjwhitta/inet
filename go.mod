@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/mjwhitta/errors v1.0.3
-	github.com/mjwhitta/win v0.24.1
+	github.com/mjwhitta/win v0.24.4
 )
 
-require golang.org/x/sys v0.20.0 // indirect
+require golang.org/x/sys v0.21.0 // indirect
