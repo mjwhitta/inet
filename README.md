@@ -21,7 +21,7 @@ On Linux the only supported backend is `net/http`.
 Open a terminal and run the following:
 
 ```
-$ go get --ldflags "-s -w" --trimpath -u github.com/mjwhitta/inet
+$ go get -u github.com/mjwhitta/inet
 ```
 
 ## Usage
