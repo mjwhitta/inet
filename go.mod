@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	github.com/mjwhitta/errors v1.0.5
-	github.com/mjwhitta/win v0.25.1
+	github.com/mjwhitta/win v0.26.0
 )
 
 require golang.org/x/sys v0.33.0 // indirect
