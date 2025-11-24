@@ -29,6 +29,7 @@ $ go get -u github.com/mjwhitta/inet
 Minimal example:
 
 ```
+//nolint:errcheck,gosec,wrapcheck // This is merely an example
 package main
 
 import (
@@ -62,7 +63,7 @@ func configuredRequestAndDedicatedClientExample() error {
 
     // Create cookiejar
     if jar, e = cookiejar.New(nil); e != nil {
-        panic(e)
+        return e
     }
 
     // Create client
@@ -119,9 +120,9 @@ func init() {
 
 func injectCookiesForTesting(jar http.CookieJar) error {
     var cookies []*http.Cookie = []*http.Cookie{
-        &http.Cookie{Name: "chocolatechip", Value: "yum"},
-        &http.Cookie{Name: "oatmealraisin", Value: "gross"},
-        &http.Cookie{Name: "snickerdoodle", Value: "best"},
+        {Name: "chocolatechip", Value: "yum"},
+        {Name: "oatmealraisin", Value: "gross"},
+        {Name: "snickerdoodle", Value: "best"},
     }
     var e error
     var uri *url.URL
@@ -131,6 +132,7 @@ func injectCookiesForTesting(jar http.CookieJar) error {
     }
 
     jar.SetCookies(uri, cookies)
+
     return nil
 }
 

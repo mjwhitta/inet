@@ -11,11 +11,15 @@ import (
 // client.
 type Client interface {
 	// The following functions mirror net/http functions.
-	Do(*http.Request) (*http.Response, error)
-	Get(string) (*http.Response, error)
-	Head(string) (*http.Response, error)
-	Post(string, string, io.Reader) (*http.Response, error)
-	PostForm(string, url.Values) (*http.Response, error)
+	Do(req *http.Request) (*http.Response, error)
+	Get(uri string) (*http.Response, error)
+	Head(uri string) (*http.Response, error)
+	Post(
+		uri string,
+		contentType string,
+		body io.Reader,
+	) (*http.Response, error)
+	PostForm(uri string, form url.Values) (*http.Response, error)
 
 	// These functions are unique to this module.
 	Debug(enable bool) Client

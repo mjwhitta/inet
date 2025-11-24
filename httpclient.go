@@ -11,6 +11,7 @@ import (
 // Jar(http.CookieJar) method for the Client interface.
 type HTTPClient struct {
 	http.Client
+
 	debug bool
 	ua    string
 }
@@ -35,7 +36,12 @@ func (c *HTTPClient) Do(req *http.Request) (*http.Response, error) {
 	}
 
 	if !c.debug {
-		return c.Client.Do(req)
+		if res, e = c.Client.Do(req); e != nil {
+			//nolint:wrapcheck // Intentionally not wrapping
+			return nil, e
+		}
+
+		return res, nil
 	}
 
 	if b, e = httputil.DumpRequestOut(req, true); e == nil {
@@ -60,13 +66,15 @@ func (c *HTTPClient) Do(req *http.Request) (*http.Response, error) {
 
 			if strings.HasPrefix(line, "Content-Length:") {
 				println("Cookie: " + cookies)
+
 				skip = true
 			}
 		}
 	}
 
 	if res, e = c.Client.Do(req); e != nil {
-		return res, e
+		//nolint:wrapcheck // Intentionally not wrapping
+		return nil, e
 	}
 
 	if b, e = httputil.DumpResponse(res, true); e == nil {

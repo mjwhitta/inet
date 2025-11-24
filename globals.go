@@ -1,6 +1,11 @@
 package inet
 
+// Version is the package version
+const Version string = "0.6.5"
+
 // Supported backends
+//
+//nolint:grouper // This is an iota block
 const (
 	HTTPBackend = iota // Default on non-Windows
 	WinHTTPBackend
@@ -14,6 +19,3 @@ var (
 	defaultClients map[int]Client
 	useBackend     int
 )
-
-// Version is the package version
-const Version string = "0.6.4"
