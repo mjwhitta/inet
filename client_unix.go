@@ -2,11 +2,13 @@
 
 package inet
 
+import "github.com/mjwhitta/errors"
+
 // Backend is used to track the preferred backend HTTP client. Only
 // net/http is supported for non-Windows OS.
 func Backend(backend int) error {
-	if e := isValidBackend(backend); e != nil {
-		return e
+	if _, ok := defaultClients[backend]; !ok {
+		return errors.Newf("unsupported backend %d", backend)
 	}
 
 	useBackend = HTTPBackend
@@ -16,8 +18,9 @@ func Backend(backend int) error {
 }
 
 func init() {
-	useBackend = HTTPBackend
 	defaultClients = map[int]Client{HTTPBackend: &HTTPClient{}}
+
+	useBackend = HTTPBackend
 	DefaultClient = defaultClients[HTTPBackend]
 }
 

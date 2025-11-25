@@ -11,8 +11,8 @@ import (
 // Backend is used to track the preferred backend HTTP client. Windows
 // allows for net/http, WinHTTP, and WinINet. The default is WinINet.
 func Backend(backend int) error {
-	if e := isValidBackend(backend); e != nil {
-		return e
+	if _, ok := defaultClients[backend]; !ok {
+		return errors.Newf("unsupported backend %d", backend)
 	}
 
 	useBackend = backend
@@ -22,18 +22,22 @@ func Backend(backend int) error {
 }
 
 func init() {
-	defaultClients = map[int]Client{HTTPBackend: &HTTPClient{}}
+	var c1 *winhttp.Client
+	var c2 *wininet.Client
+	var e error
 
-	if tmp, e := winhttp.NewClient(); e != nil {
-		panic(e)
-	} else {
-		defaultClients[WinHTTPBackend] = &WinHTTPClient{*tmp}
+	if c1, e = winhttp.NewClient(); e != nil {
+		panic(errors.Newf("failed to create client: %w", e))
 	}
 
-	if tmp, e := wininet.NewClient(); e != nil {
-		panic(e)
-	} else {
-		defaultClients[WinINetBackend] = &WinINetClient{*tmp}
+	if c2, e = wininet.NewClient(); e != nil {
+		panic(errors.Newf("failed to create client: %w", e))
+	}
+
+	defaultClients = map[int]Client{
+		HTTPBackend:    &HTTPClient{},
+		WinHTTPBackend: &WinHTTPClient{*c1},
+		WinINetBackend: &WinINetClient{*c2},
 	}
 
 	useBackend = WinINetBackend
@@ -49,6 +53,10 @@ func NewClient(ua ...string) (Client, error) {
 
 	switch useBackend {
 	case HTTPBackend:
+		if len(ua) > 0 {
+			return &HTTPClient{ua: ua[0]}, nil
+		}
+
 		return &HTTPClient{}, nil
 	case WinHTTPBackend:
 		if c1, e = winhttp.NewClient(ua...); e != nil {

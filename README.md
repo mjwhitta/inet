@@ -13,9 +13,6 @@ interface and handles choosing an appropriate backend. On Windows you
 can use any of the three supported backends (defaults to `wininet`).
 On Linux the only supported backend is `net/http`.
 
-[winhttp]: https://github.com/mjwhitta/win/tree/main/winhttp
-[wininet]: https://github.com/mjwhitta/win/tree/main/wininet
-
 ## How to install
 
 Open a terminal and run the following:
@@ -172,3 +169,10 @@ func simpleGetExample() error {
 ## Links
 
 - [Source](https://github.com/mjwhitta/inet)
+
+## TODO
+
+- Unit tests
+
+[winhttp]: https://github.com/mjwhitta/win/tree/main/winhttp
+[wininet]: https://github.com/mjwhitta/win/tree/main/wininet

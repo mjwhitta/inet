@@ -1,5 +1,6 @@
 //go:build windows
 
+//nolint:dupl // Not exactly the same. Expected anyways.
 package inet
 
 import (
