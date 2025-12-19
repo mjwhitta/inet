@@ -1,7 +1,7 @@
 package inet
 
 // Version is the package version
-const Version string = "0.6.10"
+const Version string = "0.6.11"
 
 // Supported backends
 //
