@@ -1,7 +1,7 @@
 package inet
 
 // Version is the package version
-const Version string = "0.6.11"
+const Version string = "0.6.12"
 
 // Supported backends
 //
@@ -15,7 +15,8 @@ const (
 var (
 	// DefaultClient points to the default Client for the current
 	// backend.
-	DefaultClient  Client
+	DefaultClient Client
+
 	defaultClients map[int]Client
 	useBackend     int
 )
