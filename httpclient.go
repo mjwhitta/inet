@@ -35,51 +35,47 @@ func (c *HTTPClient) Do(req *http.Request) (*http.Response, error) {
 		req.Header.Set("User-Agent", c.ua)
 	}
 
-	if !c.debug {
-		if res, e = c.Client.Do(req); e != nil {
-			//nolint:wrapcheck // Intentionally not wrapping
-			return nil, e
-		}
+	if c.debug {
+		if b, e = httputil.DumpRequestOut(req, true); e == nil {
+			if c.Client.Jar != nil {
+				for _, cookie := range c.Client.Jar.Cookies(req.URL) {
+					if cookies == "" {
+						cookies = cookie.String()
+					} else {
+						cookies += "; " + cookie.String()
+					}
+				}
+			}
 
-		return res, nil
-	}
+			skip = cookies == ""
 
-	if b, e = httputil.DumpRequestOut(req, true); e == nil {
-		if c.Client.Jar != nil {
-			for _, cookie := range c.Client.Jar.Cookies(req.URL) {
-				if cookies == "" {
-					cookies = cookie.String()
-				} else {
-					cookies += "; " + cookie.String()
+			for _, line := range strings.Split(string(b), "\n") {
+				println(line)
+
+				if skip {
+					continue
+				}
+
+				if strings.HasPrefix(line, "Content-Length:") {
+					println("Cookie: " + cookies)
+
+					skip = true
 				}
 			}
 		}
-
-		skip = cookies == ""
-
-		for _, line := range strings.Split(string(b), "\n") {
-			println(line)
-
-			if skip {
-				continue
-			}
-
-			if strings.HasPrefix(line, "Content-Length:") {
-				println("Cookie: " + cookies)
-
-				skip = true
-			}
-		}
 	}
 
+	//nolint:gosec // G704 - huh?
 	if res, e = c.Client.Do(req); e != nil {
 		//nolint:wrapcheck // Intentionally not wrapping
 		return nil, e
 	}
 
-	if b, e = httputil.DumpResponse(res, true); e == nil {
-		println()
-		println(string(b))
+	if c.debug {
+		if b, e = httputil.DumpResponse(res, true); e == nil {
+			println()
+			println(string(b))
+		}
 	}
 
 	return res, nil
