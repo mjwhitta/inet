@@ -1,6 +1,6 @@
-github.com/mjwhitta/errors v1.0.7 h1:gj4MNIc/DiZMZ7B0+Tz/0ExhpwurzOmuO3THTJZGkHw=
-github.com/mjwhitta/errors v1.0.7/go.mod h1:NoDi7MJLuXJuf69DeHiQMveI72TcKJdEAGVb2JJOVOs=
-github.com/mjwhitta/win v0.31.9 h1:F8S8OsCka5ioQ0hgTas0CsvaNfAPPTDDaDBNekO37TQ=
-github.com/mjwhitta/win v0.31.9/go.mod h1:60kRb8YP5o5jWmVrfQA0GMy3x7jGUkj6yg5LFsLzGPM=
-golang.org/x/sys v0.41.0 h1:Ivj+2Cp/ylzLiEU89QhWblYnOE9zerudt9Ftecq2C6k=
-golang.org/x/sys v0.41.0/go.mod h1:OgkHotnGiDImocRcuBABYBEXf8A9a87e/uXjp9XT3ks=
+github.com/mjwhitta/errors v1.0.8 h1:CcuSFrF/jcF6JJNORDpIC27tXK/HNRmDOIyZckGjSEc=
+github.com/mjwhitta/errors v1.0.8/go.mod h1:RnS1GAoLGQTUZN41OcAl/q5LJknZizTa2L0dTPKKHyM=
+github.com/mjwhitta/win v0.31.10 h1:u2JWbiMC13akPT3u6QO006cojb60O948mbmKjlEaKys=
+github.com/mjwhitta/win v0.31.10/go.mod h1:N6TNYAtFktqeSN3jk9oXqtawft0wCq3g+Gh31XLspNM=
+golang.org/x/sys v0.46.0 h1:noSf2Fq6F8DBgS+LysIkx7rIExoNHJsxOAtPp4rthXw=
+golang.org/x/sys v0.46.0/go.mod h1:4GL1E5IUh+htKOUEOaiffhrAeqysfVGipDYzABqnCmw=
